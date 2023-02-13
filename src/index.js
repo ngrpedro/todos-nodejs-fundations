@@ -75,6 +75,10 @@ app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
 
   const todo = user.todos.find((todo) => todo.id === id);
 
+  if (!todo) {
+    return response.status(404).json({ error: "Todo not found!" });
+  }
+
   todo.title = title;
   todo.deadline = deadline;
 
@@ -87,6 +91,10 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
   const { user } = request;
 
   const todo = user.todos.find((todo) => todo.id === id);
+
+  if (!todo) {
+    return response.status(404).json({ error: "Todo not found!" });
+  }
 
   todo.done = true;
 
@@ -101,7 +109,7 @@ app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
   const todoToRemove = user.todos.findIndex((todo) => todo.id === id);
 
   if (todoToRemove === -1) {
-    return response.status(401).json({ error: "Todo not found!" });
+    return response.status(404).json({ error: "Todo not found!" });
   }
 
   user.todos.splice(todoToRemove, 1);
