@@ -57,6 +57,7 @@ app.post("/todos", checksExistsUserAccount, (request, response) => {
   const newTodo = {
     id: uuidv4(),
     title,
+    done: false,
     deadline: new Date(deadline),
     created_at: new Date(),
   };
@@ -82,6 +83,14 @@ app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
 
 app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
   // Complete aqui
+  const { id } = request.params;
+  const { user } = request;
+
+  const todo = user.todos.find((todo) => todo.id === id);
+
+  todo.done = true;
+
+  return response.status(200).json(todo);
 });
 
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
