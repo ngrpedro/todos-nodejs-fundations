@@ -15,8 +15,6 @@ function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
   const user = users.find((user) => user.username === username);
 
-  console.log(user);
-
   if (!user) {
     return response.status(400).json({ error: "User not fund!" });
   }
@@ -48,11 +46,24 @@ app.get("/todos", checksExistsUserAccount, (request, response) => {
   // Complete aqui
   const { user } = request;
 
-  return response.status(200).json(user.todos)
+  return response.status(200).json(user.todos);
 });
 
 app.post("/todos", checksExistsUserAccount, (request, response) => {
   // Complete aqui
+  const { title, deadline } = request.body;
+  const { user } = request;
+
+  const newTodo = {
+    id: uuidv4(),
+    title,
+    deadline: new Date(deadline),
+    created_at: new Date(),
+  };
+
+  user.todos.push(newTodo);
+
+  return response.status(201).json(user.todos);
 });
 
 app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
